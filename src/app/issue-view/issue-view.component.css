@@ -1,0 +1,11 @@
+.background{
+    background-image: url('./../assets/background.png');
+    min-height: 100vh;
+}
+
+.bg-div {
+    border: 2px solid grey;
+    border-radius: 20px;
+    padding: 20px;
+    background: #e8eaf6;
+}

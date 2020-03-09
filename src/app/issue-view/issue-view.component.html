@@ -1,0 +1,58 @@
+<div class=" container-fluid background">
+    <div class="row p-5" style="text-align:left">
+     <div class="col-md-12"> 
+         <div class="bg-div">
+       <div class="row" style="justify-items: center" *ngIf="responseData">
+         <div class="col-md-12">
+           <h2>{{responseData.title}}</h2>
+           <hr>
+           <h5>Created by {{responseData.reporter}} on {{responseData.createdOn | date}}</h5>
+           <hr>
+           <h4>Description of the Issue:-</h4>
+           <p>{{responseData.description}}</p>
+           <hr>
+           <h5>Status - {{responseData.status}}</h5>
+           <hr>
+           <h5>Assigned To - {{responseData.assignedTo}}</h5>
+           <hr>
+           <h6>Attachments -</h6>
+           <a *ngFor="let name of fileName; let i = index" (click)="download(i)" style="cursor: pointer; color: blue"><i class="fas fa-paperclip" ></i> {{name}}
+             <br></a>
+         </div>
+       </div>
+       <hr>
+       <div class="row p-3" *ngIf="responseData" style="display: flex; justify-content: space-between">
+           
+               <a class="btn btn-warning btn-lg" (click)="goBack()" style="color: white; margin-top: 10px"><i class="fas fa-arrow-left"></i>&nbsp;&nbsp;&nbsp;Go Back</a>
+             
+               <a class="btn btn-danger btn-lg" style="margin-top: 10px; color: white" (click)="deleteIssue()"><i class="fas fa-trash"></i>&nbsp;&nbsp;&nbsp;Delete</a>
+          
+               <a class="btn btn-info btn-lg" [routerLink]="['/issue-edit/',responseData.issueId]" style="margin-top: 10px"><i class="fas fa-pencil-alt"></i>&nbsp;&nbsp;&nbsp;Edit</a>
+           
+               <a class="btn btn-success btn-lg" style="color: white; margin-top: 10px" (click)="watch()" ><i class="fas fa-eye"></i>&nbsp;&nbsp;&nbsp;Watch</a>
+           
+       </div>
+         </div>
+     </div>    
+    </div> 
+    <div class="col-12" >
+       <ul class="list-group" style="width:100%; padding-bottom: 5vh;">
+         <div class="input-group">
+           <div class="input-group-prepend">
+             <span class="input-group-text">Comment here</span>
+           </div>
+           <textarea class="form-control" aria-label="With textarea" [(ngModel)]="comment" placeholder="Enter Comment here...."></textarea>
+           <button class="btn btn-secoundry" style="float:Right" (click)="addComment()">comment</button>
+         </div>
+         <span *ngIf="commentData">
+           <span *ngFor="let comments of commentData.slice().reverse()">
+             <li class="list-group-item list-group-item-light"><b>{{comments.reporter}}</b><br>
+             {{comments.description}}
+             <br>
+             <span style="font-size:smaller">{{comments.createdOn | date:"short"}}</span>
+             </li>
+           </span>
+         </span>
+       </ul>
+     </div>
+   </div>

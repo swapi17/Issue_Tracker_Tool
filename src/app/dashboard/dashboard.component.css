@@ -1,0 +1,47 @@
+.background{
+    background-image: url('./../assets/background.png');
+    min-height: 100vh
+}
+
+.firstChar{
+    border-radius: 100%;
+    line-height: 1em;
+    
+    text-align: center;
+    font-size: 2em;
+    padding: .2em;
+    margin: 0 0.5em 0 0;
+    width: 1.5em;
+    height: 1.5em;
+    float: left;
+    text-transform: uppercase;
+    background: white;
+}
+
+.profile{
+    display: flex;
+    align-items: center; 
+    border: 2px solid white;
+    padding: 0.5em;
+    border-radius:10px;
+    justify-content: space-between; 
+}
+
+
+.scrolling-wrapper-flexbox {
+    display: flex;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+.cardOne {
+      flex: 0 0 auto;
+    }
+::-webkit-scrollbar{
+    width: 0px;
+    background: transparent;
+}
+ 
+.dropdown-menu{
+    max-height: 150px;
+    overflow-y: auto
+}

@@ -1,0 +1,200 @@
+<body class="background" style="padding-bottom: 20px">
+
+  <nav class="navbar navbar-expand-lg navbar-light">
+    <a class="navbar-brand" style="font-size:2.5em; color: white" [routerLink]="['/dashboard']">Issue-Tracker</a>
+    <button class="navbar-toggler btn btn-light" data-toggle="collapse" data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <i style="color: white; font-size: 30px;" class="fas fa-angle-double-down"></i>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <div class="profile">
+            <div style="display: inline-flex; align-items: center">
+              <div class="firstChar">{{firstChar}}</div>
+              <h3 style="color: white; text-transform:uppercase">{{userName}}</h3>
+            </div>
+            <button style="width: 150px; margin-left: 20px" class="btn btn-outline-light" (click)="toggle()">Log Out</button>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" [(ngModel)]="searchData"
+          name="searchData">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="searchIssue()">Search</button>
+      </form>
+    </div>
+  </nav>
+  <div style="padding: 1em; display: flex; justify-content: space-around">
+    <div class="btn-group">
+      <button class="btn btn-outline-light btn-lg dropdown-toggle" type="button" (click)="notifyCount()" data-toggle="dropdown"
+        aria-haspopup="true" aria-expanded="false">
+        Notifications <span class="badge badge-light" *ngIf="!notifyToggler">{{count.length}}</span>
+      </button>
+      <div class="dropdown-menu">
+        <a class="dropdown-item" *ngFor="let des of notifyData.slice().reverse()" [routerLink]="['/issue-view/',des.issueId]">{{des.descrip}}</a>
+      </div>
+    </div>
+    <button class="btn btn-outline-light btn-lg" type="submit" [routerLink]="['/issue-create']">Create New Issue</button>
+  </div>
+  <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px" *ngIf="!toggler">
+    <h2 style="color: white; text-align: center; padding: .5em">Search Details</h2>
+    <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBacklog">
+      <ul class="cardOne" *ngFor="let x of allSearchData.slice().reverse()">
+        <li class="card shadow-lg  rounded" style="width: 18rem;">
+          <div class="card-body">
+            <h6 class="card-subtitle mb-2 text-muted">Title</h6>
+            <h5 class="card-title">{{x.title | uppercase}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+            <p class="card-text">{{x.description}}</p>
+            <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Status: {{x.status}}</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+            <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+    <div style="display: flex; justify-content: space-between">
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+      <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="back()">Go Back</button>
+      <button id="buttonBacklog" class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+    </div>
+  </div>
+  <div *ngIf="toggler">
+      <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="assignedIssue.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">Assigned-Issue</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBacklog">
+        <ul class="cardOne" *ngFor="let x of assignedIssue.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h6 class="card-subtitle mb-2 text-muted">Title:-</h6>
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Status: {{x.status}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+        <button id="buttonBacklog" class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+      </div>
+    </div>
+    <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="backlogs.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">Backlogs</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollBacklog">
+        <ul class="cardOne" *ngFor="let x of backlogs.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousBacklog()">Previous</button>
+        <button id="buttonBacklog" class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextBacklog()">Next</button>
+      </div>
+    </div>
+    <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="inProgress.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">In-Progress</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollProgress">
+        <ul class="cardOne" *ngFor="let x of inProgress.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousProgress()">Previous</button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextProgress()">Next</button>
+      </div>
+    </div>
+    <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="inTest.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">In-Test</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollTest">
+        <ul class="cardOne" *ngFor="let x of inTest.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousTest()">Previous</button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextTest()">Next</button>
+      </div>
+    </div>
+    <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="done.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">Done</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollDone">
+        <ul class="cardOne" *ngFor="let x of done.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousDone()">Previous</button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextDone()">Next</button>
+      </div>
+    </div>
+    <div class="container" style="border: 2px solid white; padding: 1em; border-radius: 20px; margin-bottom: 20px"
+      *ngIf="watch.length>0">
+      <h2 style="color: white; text-align: center; padding: .5em">Watching</h2>
+      <div class="container-fluid scrolling-wrapper-flexbox" id="scrollWatch">
+        <ul class="cardOne" *ngFor="let x of watch.slice().reverse()">
+          <li class="card shadow-lg  rounded" style="width: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">{{x.title | uppercase}}</h5>
+              <h6 class="card-subtitle mb-2 text-muted">Reporter: {{x.reporter}}</h6>
+              <p class="card-text">{{x.description}}</p>
+              <h6 class="card-subtitle mb-2 text-muted">Assigned To: {{x.assignedTo}}</h6>
+              <h6 class="card-subtitle mb-2 text-muted">Created On: {{x.createdOn | date}}</h6>
+              <a class="card-link" [routerLink]="['/issue-view/',x.issueId]">View Issue</a>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <div style="display: flex; justify-content: space-between">
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollPreviousWatch()">Previous</button>
+        <button class="btn btn-outline-light my-2 my-sm-0" type="submit" (click)="scrollNextWatch()">Next</button>
+      </div>
+    </div>
+  </div>
+</body>
