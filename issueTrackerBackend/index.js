@@ -2,8 +2,8 @@ const express = require("express");
 const appConfig = require("./config/appConfig")
 const fs = require('fs');
 const mongoose = require("mongoose")
-const models = [require('./app/models/User'),
-                require('./app/models/Auth'),
+const models = [require('./App/models/User'),
+                require('./App/models/Auth'),
                 require('./App/models/SocialUser'),
                 require('./App/models/Issue'),
                 require('./App/models/Comment'),
